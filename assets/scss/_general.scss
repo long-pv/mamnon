@@ -9,7 +9,19 @@ html {
     line-height: 1.5 !important;
 }
 
+.elementor-widget-text-editor .elementor-widget-container>* {
+    margin-top: 0px !important;
+}
+
+.elementor-widget-text-editor>* {
+    margin-top: 0px !important;
+}
+
 .elementor-widget-text-editor .elementor-widget-container>*:last-child {
+    margin: 0px !important;
+}
+
+.elementor-widget-text-editor>*:last-child {
     margin: 0px !important;
 }
 
