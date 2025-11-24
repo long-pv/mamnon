@@ -1,0 +1,9 @@
+.lv_container {
+    padding-left: 8%;
+    padding-right: 8%;
+
+    @media (max-width: 768px) {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}

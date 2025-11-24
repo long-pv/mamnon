@@ -1,0 +1,161 @@
+// Đặt các biến SCSS từ các biến CSS của Elementor
+$color_primary: var(--e-global-color-primary);
+$color_secondary: var(--e-global-color-secondary);
+$color_text: var(--e-global-color-text);
+$color_accent: var(--e-global-color-accent);
+
+body,
+html {
+    line-height: 1.5 !important;
+}
+
+.elementor-widget-text-editor .elementor-widget-container>*:last-child {
+    margin: 0px !important;
+}
+
+.elementor-button-link {
+
+    .elementor-button-icon,
+    .elementor-button-text {
+        display: flex !important;
+    }
+
+    .elementor-button-icon svg {
+        width: auto;
+    }
+
+    .elementor-button-content-wrapper {
+        align-items: center !important;
+    }
+}
+
+.elementor-widget-icon-list {
+    .elementor-icon-list-icon {
+        svg {
+            margin: 0px !important;
+        }
+    }
+
+    .elementor-icon-list-text {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+}
+
+/* ===== Modal ===== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+
+    &.show {
+        display: flex;
+    }
+
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        min-width: 300px;
+        max-width: 500px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+        animation: fadeInUp 0.3s ease;
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+
+            &:hover {
+                color: red;
+            }
+        }
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ===== Tabs ===== */
+.tabs {
+    margin-top: 20px;
+
+    .tab-links {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+
+        a {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            background: #f8f8f8;
+
+            &.active {
+                background: #007bff;
+                color: #fff;
+            }
+        }
+    }
+
+    .tab-content {
+        display: none;
+        border: 1px solid #ccc;
+        padding: 15px;
+        border-radius: 4px;
+
+        &.active {
+            display: block;
+        }
+    }
+}
+
+/* ===== Accordion ===== */
+.accordion {
+    margin-top: 20px;
+
+    .accordion-item {
+        border: 1px solid #ccc;
+        margin-bottom: 5px;
+        border-radius: 4px;
+
+        .accordion-header {
+            padding: 10px;
+            cursor: pointer;
+            background: #f8f8f8;
+            color: #000;
+        }
+
+        .accordion-body {
+            display: none;
+            padding: 10px;
+            background: #fff;
+            color: #000;
+        }
+    }
+}
