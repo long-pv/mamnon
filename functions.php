@@ -167,3 +167,67 @@ function lv_news_cards_shortcode()
     return ob_get_clean();
 }
 add_shortcode('news_cards', 'lv_news_cards_shortcode');
+
+function display_latest_posts_shortcode()
+{
+    ob_start(); // Bắt đầu buổi ghi đệm HTML
+
+    // Lấy 3 bài viết mới nhất
+    $args = array(
+        'post_type' => 'post', // Lấy bài viết
+        'posts_per_page' => 3, // Lấy 3 bài viết
+        'orderby' => 'date', // Sắp xếp theo ngày đăng
+        'order' => 'DESC' // Sắp xếp giảm dần theo ngày đăng
+    );
+
+    $latest_posts = new WP_Query($args);
+
+    if ($latest_posts->have_posts()) :
+        echo '<div class="lv_news_container">';
+        echo '<div class="lv_news_grid">';
+
+        // Hiển thị bài viết lớn đầu tiên
+        $first_post = $latest_posts->posts[0];
+        echo '<div class="lv_news_bigItem">';
+        echo '<a href="' . get_permalink($first_post->ID) . '" class="lv_news_bigThumbWrapper">';
+        echo '<img src="' . get_the_post_thumbnail_url($first_post->ID, 'full') . '" alt="' . get_the_title($first_post->ID) . '" />';
+        echo '</a>';
+        echo '<div class="lv_news_bigContent">';
+        echo '<div class="lv_news_bigHeading">';
+        echo '<a href="' . get_permalink($first_post->ID) . '">' . get_the_title($first_post->ID) . '</a>';
+        echo '</div>';
+        echo '<div class="lv_news_bigExcerpt">' . wp_trim_words($first_post->post_content, 20) . '</div>';
+        echo '<div>';
+        echo '<a href="' . get_permalink($first_post->ID) . '" class="lv_news_bigReadmore">XEM chi tiết >>></a>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+
+        // Hiển thị các bài viết nhỏ
+        echo '<div class="lv_news_smallList">';
+        for ($i = 1; $i < count($latest_posts->posts); $i++) {
+            $post = $latest_posts->posts[$i];
+            echo '<div class="lv_news_smallItem">';
+            echo '<a href="' . get_permalink($post->ID) . '" class="lv_news_smallThumbWrapper">';
+            echo '<img src="' . get_the_post_thumbnail_url($post->ID, 'thumbnail') . '" alt="ảnh nhỏ ' . ($i + 1) . '" />';
+            echo '</a>';
+            echo '<div class="lv_news_smallContent">';
+            echo '<div class="lv_news_smallHeading">';
+            echo '<a href="' . get_permalink($post->ID) . '">' . get_the_title($post->ID) . '</a>';
+            echo '</div>';
+            echo '<div class="lv_news_smallExcerpt">' . wp_trim_words($post->post_content, 20) . '</div>';
+            echo '<a href="' . get_permalink($post->ID) . '" class="lv_news_smallReadmore">XEM THÊM >>></a>';
+            echo '</div>';
+            echo '</div>';
+        }
+        echo '</div>'; // Kết thúc lv_news_smallList
+
+        echo '</div>'; // Kết thúc lv_news_grid
+        echo '</div>'; // Kết thúc lv_news_container
+    endif;
+
+    wp_reset_postdata(); // Reset lại dữ liệu post query
+
+    return ob_get_clean(); // Kết thúc ghi đệm và trả về kết quả
+}
+add_shortcode('latest_posts', 'display_latest_posts_shortcode');
