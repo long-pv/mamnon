@@ -2,186 +2,219 @@
 <html lang="vi">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Tin tức mới nhất</title>
-
+		<title>Demo Tin tức</title>
 		<style>
-			body {
-				font-family: "Nunito Sans", sans-serif;
-				background: #f7f8fa;
+			.lv_news_container {
+				width: 100%;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 40px 0;
+				font-family: Arial, sans-serif;
 			}
 
-			/* Section */
-			.lv_newsSection_wrapper {
-				padding: 50px 60px;
-			}
-
-			.lv_newsSection_header {
-				text-align: center;
-				margin-bottom: 40px;
-			}
-
-			.lv_newsSection_title {
-				font-size: 28px;
-				font-weight: 700;
-				color: #1f3349;
-			}
-
-			.lv_newsSection_subtitle {
-				font-size: 16px;
-				color: #6d7a88;
-			}
-
-			/* Grid */
-			.lv_newsSection_grid {
+			.lv_news_grid {
 				display: grid;
-				grid-template-columns: repeat(3, 370px);
-				justify-content: center;
-				gap: 40px;
+				grid-template-columns: 1fr 0.8fr;
+				grid-gap: 28px;
+				align-items: start;
 			}
 
-			/* Card */
-			.lv_newsCard_wrapper {
-				width: 370px;
-			}
-
-			/* IMAGE (theo Figma: 370 x 249 - radius 12px) */
-			.lv_newsCard_imageBox {
-				width: 370px;
-				height: 249px;
+			.lv_news_bigItem {
+				background: #ffffff;
 				border-radius: 12px;
 				overflow: hidden;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+				position: relative;
 			}
 
-			.lv_newsCard_imageBox img {
+			.lv_news_bigItem::before {
+				content: "";
+				background: linear-gradient(180deg, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 1) 100%);
+				position: absolute;
+				left: 0px;
+				right: 0px;
+				width: 100%;
+				height: 100%;
+			}
+
+			.lv_news_bigThumbWrapper {
+				width: 100%;
+				height: auto;
+				overflow: hidden;
+				display: flex;
+			}
+
+			.lv_news_bigThumbWrapper img {
 				width: 100%;
 				height: 100%;
 				object-fit: cover;
 			}
 
-			/* Badge */
-			.lv_newsCard_badge {
-				display: inline-block;
-				margin-top: 16px;
-				padding: 6px 12px;
-				font-size: 14px;
+			.lv_news_bigContent {
+				padding: 24px;
 				color: #fff;
-				border-radius: 6px;
+				position: absolute;
+				bottom: 0px;
+				left: 0px;
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
 			}
 
-			.lv_newsCard_badge_event {
-				background: #ffb74d;
+			.lv_news_bigHeading {
+				margin-bottom: 0px;
 			}
 
-			.lv_newsCard_badge_news {
-				background: #4caf50;
-			}
-
-			.lv_newsCard_badge_science {
-				background: #03a9f4;
-			}
-
-			/* TITLE (Figma: Nunito, bold, 18px, line-height 26px, width 370px, height 55px) */
-			.lv_newsCard_title {
-				width: 370px;
-				margin-top: 16px;
-			}
-
-			.lv_newsCard_title a {
-				font-size: 18px;
+			.lv_news_bigHeading a {
+				font-size: 20px;
 				font-weight: 700;
-				line-height: 26px;
-				color: #246055;
+				color: #ffffff;
 				text-decoration: none;
-				display: block;
 			}
 
-			/* DESCRIPTION (Figma: width 354px, height 61px, color #4A4B4B) */
-			.lv_newsCard_desc {
-				width: 354px;
-				margin-top: 10px;
-				font-size: 15px;
-				line-height: 22px;
-				color: #4a4b4b;
+			.lv_news_bigExcerpt {
+				font-size: 14px;
+				color: #ffffff;
+				margin-bottom: 0px;
 			}
 
-			/* XEM THÊM (Figma: font 13px Semibold, color rgba(#22343D, 80%)) */
-			.lv_newsCard_more {
-				margin-top: 12px;
-				display: inline-block;
+			.lv_news_bigReadmore {
+				display: inline-flex;
+				color: #fff;
 				font-size: 13px;
 				font-weight: 600;
-				color: rgba(34, 52, 61, 0.8);
+				text-decoration: none;
+				text-transform: uppercase;
+			}
+
+			.lv_news_smallList {
+				display: grid;
+				grid-template-columns: 1fr;
+				row-gap: 24px;
+			}
+
+			.lv_news_smallItem {
+				display: grid;
+				grid-template-columns: 0.7fr 1fr;
+				gap: 16px;
+				align-items: start;
+			}
+
+			.lv_news_smallThumbWrapper {
+				width: 100%;
+				height: 0px;
+				overflow: hidden;
+				border-radius: 16px;
+				position: relative;
+				padding-bottom: 81.5%;
+			}
+
+			.lv_news_smallThumbWrapper img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				position: absolute;
+				left: 0px;
+				top: 0px;
+			}
+
+			.lv_news_smallContent {
+				display: flex;
+				flex-direction: column;
+			}
+
+			.lv_news_smallHeading {
+				margin-bottom: 4px;
+			}
+
+			.lv_news_smallHeading a {
+				font-size: 16px;
+				font-weight: 700;
+				color: #246055;
+				text-decoration: none;
+				-webkit-line-clamp: 1;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+			}
+
+			.lv_news_smallExcerpt {
+				font-size: 14px;
+				color: #000000;
+				margin-bottom: 16px;
+				-webkit-line-clamp: 4;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+			}
+
+			.lv_news_smallReadmore {
+				font-size: 13px;
+				font-weight: 600;
+				color: #485a61;
 				text-decoration: none;
 			}
 		</style>
 	</head>
-
 	<body>
-		<section class="lv_newsSection_wrapper">
-			<div class="lv_newsSection_header">
-				<h2 class="lv_newsSection_title">Tin Tức Mới Nhất</h2>
-				<p class="lv_newsSection_subtitle">Cập nhật các hoạt động và bài viết nổi bật</p>
-			</div>
-
-			<div class="lv_newsSection_grid">
-				<!-- CARD 1 -->
-				<div class="lv_newsCard_wrapper">
-					<a href="#">
-						<div class="lv_newsCard_imageBox">
-							<img src="image1.png" alt="" />
-						</div>
+		<div class="lv_news_container">
+			<div class="lv_news_grid">
+				<!-- BIG ARTICLE -->
+				<div class="lv_news_bigItem">
+					<a href="#" class="lv_news_bigThumbWrapper">
+						<img src="https://cdn-media.sforum.vn/storage/app/media/ctv_seo3/anh-co-gai-xinh-dep-59.jpg" alt="ảnh demo" />
 					</a>
 
-					<span class="lv_newsCard_badge lv_newsCard_badge_event">Sự kiện</span>
+					<div class="lv_news_bigContent">
+						<div class="lv_news_bigHeading">
+							<a href="#">Nulla Aliquam Metus Orci, Vel Pulvinar Nibh Feugiat</a>
+						</div>
 
-					<h3 class="lv_newsCard_title">
-						<a href="#">Chính Thức Khởi Động Cuộc Thi “Vua Đầu Bếp Nhí”</a>
-					</h3>
+						<div class="lv_news_bigExcerpt">Hải Đăng Xanh gợi ý một số ý tưởng giúp nghệ thuật trở nên dễ thương cho bé mẹ chỉ cùng bé trong những ngày cuối tuần...</div>
 
-					<p class="lv_newsCard_desc">Để hưởng ứng cho một năm học mới tràn đầy năng lượng...</p>
-
-					<a href="#" class="lv_newsCard_more">XEM THÊM >>></a>
+						<div>
+							<a href="#" class="lv_news_bigReadmore">XEM chi tiết >>></a>
+						</div>
+					</div>
 				</div>
 
-				<!-- CARD 2 -->
-				<div class="lv_newsCard_wrapper">
-					<a href="#">
-						<div class="lv_newsCard_imageBox">
-							<img src="image2.png" alt="" />
+				<!-- SMALL ARTICLES LIST -->
+				<div class="lv_news_smallList">
+					<div class="lv_news_smallItem">
+						<a href="#" class="lv_news_smallThumbWrapper">
+							<img src="https://cdn-media.sforum.vn/storage/app/media/ctv_seo3/anh-co-gai-xinh-dep-59.jpg" alt="ảnh nhỏ 1" />
+						</a>
+
+						<div class="lv_news_smallContent">
+							<div class="lv_news_smallHeading">
+								<a href="#">Tìm Hiểu Về Môn Science Cho Bé</a>
+							</div>
+
+							<div class="lv_news_smallExcerpt">Có bao giờ bố mẹ băn khoăn rằng ở trường, các con được dạy gì về môn học Science?</div>
+
+							<a href="#" class="lv_news_smallReadmore">XEM THÊM >>></a>
 						</div>
-					</a>
+					</div>
 
-					<span class="lv_newsCard_badge lv_newsCard_badge_news">Tin tức</span>
+					<div class="lv_news_smallItem">
+						<a href="#" class="lv_news_smallThumbWrapper">
+							<img src="https://cdn-media.sforum.vn/storage/app/media/ctv_seo3/anh-co-gai-xinh-dep-59.jpg" alt="ảnh nhỏ 2" />
+						</a>
 
-					<h3 class="lv_newsCard_title">
-						<a href="#">[DIY] Hướng Dẫn Làm Chú Ếch Origami</a>
-					</h3>
+						<div class="lv_news_smallContent">
+							<div class="lv_news_smallHeading">
+								<a href="#">Tìm Hiểu Về Môn Science Cho Bé</a>
+							</div>
 
-					<p class="lv_newsCard_desc">Gợi ý một số ý tưởng gấp nghệ thuật thú vị cho bé...</p>
+							<div class="lv_news_smallExcerpt">Hãy cùng Hải Đăng Xanh tìm hiểu trong bài viết dưới đây…</div>
 
-					<a href="#" class="lv_newsCard_more">XEM THÊM >>></a>
-				</div>
-
-				<!-- CARD 3 -->
-				<div class="lv_newsCard_wrapper">
-					<a href="#">
-						<div class="lv_newsCard_imageBox">
-							<img src="image3.png" alt="" />
+							<a href="#" class="lv_news_smallReadmore">XEM THÊM >>></a>
 						</div>
-					</a>
-
-					<span class="lv_newsCard_badge lv_newsCard_badge_science">Tin tức</span>
-
-					<h3 class="lv_newsCard_title">
-						<a href="#">Tìm Hiểu Về Môn Science Cho Bé</a>
-					</h3>
-
-					<p class="lv_newsCard_desc">Có bao giờ bố mẹ băn khoăn rằng các con được học gì ở môn Science?</p>
-
-					<a href="#" class="lv_newsCard_more">XEM THÊM >>></a>
+					</div>
 				</div>
 			</div>
-		</section>
+		</div>
 	</body>
 </html>
