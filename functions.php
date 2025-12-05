@@ -54,29 +54,18 @@ add_action('wp_enqueue_scripts', 'child_theme_scripts');
 
 // Tạo menu theme settings chung
 // Setup theme setting page
-// if (function_exists('acf_add_options_page')) {
-//     // Trang cài đặt chính
-//     acf_add_options_page(array(
-//         'page_title' => 'Theme Settings',
-//         'menu_title' => 'Theme Settings',
-//         'menu_slug'  => 'theme-settings',
-//         'capability' => 'edit_posts',
-//         'redirect'   => false,
-//         'position'   => 80
-//     ));
-// }
+if (function_exists('acf_add_options_page')) {
+    // Trang cài đặt chính
+    acf_add_options_page(array(
+        'page_title' => 'Theme Settings',
+        'menu_title' => 'Theme Settings',
+        'menu_slug'  => 'theme-settings',
+        'capability' => 'edit_posts',
+        'redirect'   => false,
+        'position'   => 80
+    ));
+}
 // end
-
-// stop upgrading ACF pro plugin
-// add_filter('site_transient_update_plugins', 'disable_plugins_update');
-// function disable_plugins_update($value)
-// {
-//     // disable acf pro
-//     if (isset($value->response['advanced-custom-fields-pro/acf.php'])) {
-//         unset($value->response['advanced-custom-fields-pro/acf.php']);
-//     }
-//     return $value;
-// }
 
 // load widgets library by elementor
 function load_custom_widgets()
@@ -227,7 +216,7 @@ function lv_event_cards_shortcode()
     // Query lấy 3 event mới nhất
     $args = array(
         'post_type'      => 'event',
-        'posts_per_page' => 3,
+        'posts_per_page' => 12,
         'post_status'    => 'publish'
     );
     $query = new WP_Query($args);
@@ -303,7 +292,7 @@ function lv_event_cards_paging_shortcode()
     // Query event — 12 bài
     $args = array(
         'post_type'      => 'event',
-        'posts_per_page' => 3,
+        'posts_per_page' => 12,
         'paged'          => $paged,
         'post_status'    => 'publish'
     );
@@ -387,3 +376,96 @@ function lv_event_cards_paging_shortcode()
     return ob_get_clean();
 }
 add_shortcode('event_cards_paging', 'lv_event_cards_paging_shortcode');
+
+function lv_post_cards_paging_shortcode()
+{
+    // Lấy trang hiện tại
+    $paged = get_query_var('paged') ? get_query_var('paged') : 1;
+
+    // Query post — 3 bài mỗi trang
+    $args = array(
+        'post_type'      => 'post',
+        'posts_per_page' => 12,
+        'paged'          => $paged,
+        'post_status'    => 'publish'
+    );
+
+    $query = new WP_Query($args);
+
+    ob_start();
+?>
+
+    <section class="lv_newsSection_wrapper">
+
+        <div class="lv_newsSection_grid">
+
+            <?php while ($query->have_posts()) : $query->the_post(); ?>
+
+                <div class="lv_newsCard_wrapper">
+
+                    <!-- IMAGE -->
+                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_imageBox">
+                        <?php if (has_post_thumbnail()): ?>
+                            <?php the_post_thumbnail('full', ['class' => 'lv_newsCard_image']); ?>
+                        <?php endif; ?>
+                    </a>
+
+                    <!-- TITLE -->
+                    <h3 class="lv_newsCard_title">
+                        <a href="<?php the_permalink(); ?>">
+                            <?php the_title(); ?>
+                        </a>
+                    </h3>
+
+                    <!-- BADGE -->
+                    <span class="lv_newsCard_badge">
+                        <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_2043_127)">
+                                <path d="M6.79662 1.20654L9.91163 6.63569H3.68161L6.79662 1.20654Z" fill="white" />
+                                <path d="M3.68134 13.2714C2.27376 13.2714 1.1327 12.0561 1.1327 10.5569C1.1327 9.05764 2.27376 7.84229 3.68134 7.84229C5.08892 7.84229 6.22999 9.05764 6.22999 10.5569C6.22999 12.0561 5.08892 13.2714 3.68134 13.2714Z" fill="white" />
+                                <path d="M11.8936 8.14355H7.36264V12.9695H11.8936V8.14355Z" fill="white" />
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_2043_127">
+                                    <rect width="13.5928" height="14.4777" fill="white" transform="matrix(-1 0 0 1 13.5928 0)" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <?php _e('Tin tức', 'child_theme'); ?>
+                    </span>
+
+                    <!-- DESCRIPTION -->
+                    <div class="lv_newsCard_desc">
+                        <?php echo wp_trim_words(get_the_excerpt(), 20, '...'); ?>
+                    </div>
+
+                    <!-- BUTTON -->
+                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more">XEM THÊM >>></a>
+
+                </div>
+
+            <?php endwhile;
+            wp_reset_postdata(); ?>
+
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="pagination_custom">
+            <?php
+            echo paginate_links(array(
+                'total'     => $query->max_num_pages,
+                'current'   => $paged,
+                'end_size'  => 2,
+                'mid_size'  => 1,
+                'prev_text' => '',
+                'next_text' => '',
+            ));
+            ?>
+        </div>
+
+    </section>
+
+<?php
+    return ob_get_clean();
+}
+add_shortcode('post_cards_paging', 'lv_post_cards_paging_shortcode');
