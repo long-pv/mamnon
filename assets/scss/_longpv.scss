@@ -796,3 +796,42 @@
     color: #485a61 !important;
     text-decoration: none;
 }
+
+.pagination_custom,
+.woocommerce-pagination {
+    justify-content: center;
+    align-items: center;
+    margin-top: 24px;
+    display: flex;
+
+    .page-numbers {
+        padding: 5px 12px;
+        font-weight: 700;
+        color: #246055 !important;
+        text-decoration: none;
+        font-size: 14px;
+
+        &.current {
+            background: #246055;
+            border-radius: 4px;
+            color: #fff !important;
+        }
+
+        &.next,
+        &.prev {
+            padding: 0;
+
+            &:hover {
+                background: transparent;
+            }
+        }
+    }
+
+    .prev {
+        content: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='25' viewBox='0 0 24 25' fill='none'%3e%3cpath d='M15 17.5L10.4068 13.3838C9.86439 12.8977 9.86439 12.1023 10.4068 11.6161L15 7.49998' stroke='%23C0C0C0' stroke-width='1.5' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+    }
+
+    .next {
+        content: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='25' viewBox='0 0 24 25' fill='none'%3e%3cpath d='M10 17.5L14.5932 13.3838C15.1356 12.8977 15.1356 12.1023 14.5932 11.6162L10 7.5' stroke='%23C0C0C0' stroke-width='1.5' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+    }
+}
