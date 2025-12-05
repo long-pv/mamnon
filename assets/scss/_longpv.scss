@@ -570,6 +570,14 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 28px;
+
+    @media (max-width: 1200px) {
+        gap: 24px;
+    }
+
+    @media (max-width: 767px) {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
 
 /* IMAGE (theo Figma: 370 x 249 - radius 12px) */
