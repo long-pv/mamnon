@@ -484,7 +484,7 @@ add_action('wp_nav_menu_item_custom_fields', function ($item_id, $item) {
                 placeholder="https://domain.com/icon.png" />
         </label>
     </p>
-<?php
+    <?php
 }, 10, 2);
 
 // Lưu URL icon
@@ -505,3 +505,52 @@ add_filter('walker_nav_menu_start_el', function ($item_output, $item) {
     }
     return $item_output;
 }, 10, 2);
+
+// SHORTCODE: [news_list]
+function lv_newsList_shortcode()
+{
+    $query = new WP_Query(array(
+        'post_type'      => 'post',
+        'posts_per_page' => 5,
+        'post_status'    => 'publish'
+    ));
+
+    ob_start();
+
+    if ($query->have_posts()) {
+        echo '<div class="lv_newsList_wrapper">';
+
+        while ($query->have_posts()) {
+            $query->the_post();
+
+            $img = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+    ?>
+            <div class="lv_newsList_item">
+
+                <div class="lv_newsList_imgBox">
+                    <a href="<?php the_permalink(); ?>">
+                        <?php if ($img): ?>
+                            <img class="lv_newsList_img" src="<?php echo $img; ?>" alt="<?php the_title(); ?>">
+                        <?php endif; ?>
+                    </a>
+                </div>
+
+                <div class="lv_newsList_content">
+                    <div class="lv_newsList_titleBox">
+                        <a href="<?php the_permalink(); ?>">
+                            <h3 class="lv_newsList_title"><?php the_title(); ?></h3>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+<?php
+        }
+
+        echo '</div>';
+        wp_reset_postdata();
+    }
+
+    return ob_get_clean();
+}
+add_shortcode('news_list', 'lv_newsList_shortcode');

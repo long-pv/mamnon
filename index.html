@@ -1,220 +1,110 @@
-<!DOCTYPE html>
-<html lang="vi">
-	<head>
-		<meta charset="UTF-8" />
-		<title>Demo Tin tức</title>
-		<style>
-			.lv_news_container {
-				width: 100%;
-				max-width: 1200px;
-				margin: 0 auto;
-				padding: 40px 0;
-				font-family: Arial, sans-serif;
-			}
+<style>
+	.lv_newsList_wrapper {
+		display: grid;
+		grid-template-columns: 1fr;
+		row-gap: 16px;
+	}
 
-			.lv_news_grid {
-				display: grid;
-				grid-template-columns: 1fr 0.8fr;
-				grid-gap: 28px;
-				align-items: start;
-			}
+	.lv_newsList_item {
+		display: grid;
+		grid-template-columns: 105px 1fr;
+		column-gap: 16px;
+		align-items: flex-start;
+	}
 
-			.lv_news_bigItem {
-				background: #ffffff;
-				border-radius: 16px;
-				overflow: hidden;
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-				position: relative;
-			}
+	/* KHUNG TỶ LỆ 105 / 78 (padding-bottom trực tiếp) */
+	.lv_newsList_imgBox {
+		width: 105px;
+		padding-bottom: 74.2857%; /* 78/105 * 100 */
+		position: relative;
+		overflow: hidden;
+		border-radius: 0px;
+	}
 
-			.lv_news_bigItem::before {
-				content: "";
-				background: linear-gradient(180deg, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 1) 100%);
-				position: absolute;
-				left: 0px;
-				right: 0px;
-				width: 100%;
-				height: 100%;
-			}
+	.lv_newsList_imgBox a {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
 
-			.lv_news_bigThumbWrapper {
-				width: 100%;
-				height: auto;
-				overflow: hidden;
-				display: flex;
-			}
+	.lv_newsList_img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
 
-			.lv_news_bigThumbWrapper img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-			}
+	.lv_newsList_content {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
 
-			.lv_news_bigContent {
-				padding: 24px;
-				color: #fff;
-				position: absolute;
-				bottom: 0px;
-				left: 0px;
-				display: flex;
-				flex-direction: column;
-				gap: 8px;
-			}
+	.lv_newsList_titleBox a {
+		text-decoration: none;
+		color: #000;
+	}
 
-			.lv_news_bigHeading {
-				margin-bottom: 0px;
-			}
+	.lv_newsList_title {
+		font-size: 16px;
+		color: #000000;
+		overflow: hidden;
+		-o-text-overflow: ellipsis;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		line-height: 147%;
+		margin: 0px;
+		text-transform: uppercase;
+	}
+</style>
 
-			.lv_news_bigHeading a {
-				font-size: 20px;
-				font-weight: 700;
-				color: #ffffff;
-				text-decoration: none;
-			}
+<div class="lv_newsList_wrapper">
+	<!-- ITEM 1 -->
+	<div class="lv_newsList_item">
+		<div class="lv_newsList_imgBox">
+			<a href="#">
+				<img class="lv_newsList_img" src="https://top10tphcm.com/wp-content/uploads/2024/04/hinh-anh-gai-xinh-cuoi-dep-08.jpg" />
+			</a>
+		</div>
 
-			.lv_news_bigExcerpt {
-				font-size: 14px;
-				color: #ffffff;
-				margin-bottom: 0px;
-			}
-
-			.lv_news_bigReadmore {
-				display: inline-flex;
-				color: #fff;
-				font-size: 13px;
-				font-weight: 600;
-				text-decoration: none;
-				text-transform: uppercase;
-			}
-
-			.lv_news_smallList {
-				display: grid;
-				grid-template-columns: 1fr;
-				row-gap: 24px;
-			}
-
-			.lv_news_smallItem {
-				display: grid;
-				grid-template-columns: 0.7fr 1fr;
-				gap: 16px;
-				align-items: start;
-			}
-
-			.lv_news_smallThumbWrapper {
-				width: 100%;
-				height: 0px;
-				overflow: hidden;
-				border-radius: 16px;
-				position: relative;
-				padding-bottom: 81.5%;
-			}
-
-			.lv_news_smallThumbWrapper img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				position: absolute;
-				left: 0px;
-				top: 0px;
-			}
-
-			.lv_news_smallContent {
-				display: flex;
-				flex-direction: column;
-			}
-
-			.lv_news_smallHeading {
-				margin-bottom: 4px;
-			}
-
-			.lv_news_smallHeading a {
-				font-size: 16px;
-				font-weight: 700;
-				color: #246055;
-				text-decoration: none;
-				-webkit-line-clamp: 1;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				display: -webkit-box;
-				-webkit-box-orient: vertical;
-			}
-
-			.lv_news_smallExcerpt {
-				font-size: 14px;
-				color: #000000;
-				margin-bottom: 16px;
-				-webkit-line-clamp: 4;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				display: -webkit-box;
-				-webkit-box-orient: vertical;
-			}
-
-			.lv_news_smallReadmore {
-				font-size: 13px;
-				font-weight: 600;
-				color: #485a61;
-				text-decoration: none;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="lv_news_container">
-			<div class="lv_news_grid">
-				<!-- BIG ARTICLE -->
-				<div class="lv_news_bigItem">
-					<a href="#" class="lv_news_bigThumbWrapper">
-						<img src="https://cdn-media.sforum.vn/storage/app/media/ctv_seo3/anh-co-gai-xinh-dep-59.jpg" alt="ảnh demo" />
-					</a>
-
-					<div class="lv_news_bigContent">
-						<div class="lv_news_bigHeading">
-							<a href="#">Nulla Aliquam Metus Orci, Vel Pulvinar Nibh Feugiat</a>
-						</div>
-
-						<div class="lv_news_bigExcerpt">Hải Đăng Xanh gợi ý một số ý tưởng giúp nghệ thuật trở nên dễ thương cho bé mẹ chỉ cùng bé trong những ngày cuối tuần...</div>
-
-						<div>
-							<a href="#" class="lv_news_bigReadmore">XEM chi tiết >>></a>
-						</div>
-					</div>
-				</div>
-
-				<!-- SMALL ARTICLES LIST -->
-				<div class="lv_news_smallList">
-					<div class="lv_news_smallItem">
-						<a href="#" class="lv_news_smallThumbWrapper">
-							<img src="https://cdn-media.sforum.vn/storage/app/media/ctv_seo3/anh-co-gai-xinh-dep-59.jpg" alt="ảnh nhỏ 1" />
-						</a>
-
-						<div class="lv_news_smallContent">
-							<div class="lv_news_smallHeading">
-								<a href="#">Tìm Hiểu Về Môn Science Cho Bé</a>
-							</div>
-
-							<div class="lv_news_smallExcerpt">Có bao giờ bố mẹ băn khoăn rằng ở trường, các con được dạy gì về môn học Science?</div>
-
-							<a href="#" class="lv_news_smallReadmore">XEM THÊM >>></a>
-						</div>
-					</div>
-
-					<div class="lv_news_smallItem">
-						<a href="#" class="lv_news_smallThumbWrapper">
-							<img src="https://cdn-media.sforum.vn/storage/app/media/ctv_seo3/anh-co-gai-xinh-dep-59.jpg" alt="ảnh nhỏ 2" />
-						</a>
-
-						<div class="lv_news_smallContent">
-							<div class="lv_news_smallHeading">
-								<a href="#">Tìm Hiểu Về Môn Science Cho Bé</a>
-							</div>
-
-							<div class="lv_news_smallExcerpt">Hãy cùng Hải Đăng Xanh tìm hiểu trong bài viết dưới đây…</div>
-
-							<a href="#" class="lv_news_smallReadmore">XEM THÊM >>></a>
-						</div>
-					</div>
-				</div>
+		<div class="lv_newsList_content">
+			<div class="lv_newsList_titleBox">
+				<a href="#"><h3 class="lv_newsList_title">LỄ PHỤC SINH 2025 – HÀNH TRÌNH HỒI SINH MẶT TRỜI</h3></a>
 			</div>
 		</div>
-	</body>
-</html>
+	</div>
+
+	<!-- ITEM 2 -->
+	<div class="lv_newsList_item">
+		<div class="lv_newsList_imgBox">
+			<a href="#">
+				<img class="lv_newsList_img" src="https://top10tphcm.com/wp-content/uploads/2024/04/hinh-anh-gai-xinh-cuoi-dep-08.jpg" />
+			</a>
+		</div>
+
+		<div class="lv_newsList_content">
+			<div class="lv_newsList_titleBox">
+				<a href="#"><h3 class="lv_newsList_title">NGÀY HỘI BÁNH CHƯNG – TẾT STEM ẤT TỴ NỐI DÀI YÊU THƯƠNG</h3></a>
+			</div>
+		</div>
+	</div>
+
+	<!-- ITEM 3 -->
+	<div class="lv_newsList_item">
+		<div class="lv_newsList_imgBox">
+			<a href="#">
+				<img class="lv_newsList_img" src="https://top10tphcm.com/wp-content/uploads/2024/04/hinh-anh-gai-xinh-cuoi-dep-08.jpg" />
+			</a>
+		</div>
+
+		<div class="lv_newsList_content">
+			<div class="lv_newsList_titleBox">
+				<a href="#"><h3 class="lv_newsList_title">GIÁNG SINH CỦA NHỮNG ĐIỀU KỲ DIỆU</h3></a>
+			</div>
+		</div>
+	</div>
+</div>

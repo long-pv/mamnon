@@ -843,3 +843,66 @@
         content: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='25' viewBox='0 0 24 25' fill='none'%3e%3cpath d='M10 17.5L14.5932 13.3838C15.1356 12.8977 15.1356 12.1023 14.5932 11.6162L10 7.5' stroke='%23C0C0C0' stroke-width='1.5' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
     }
 }
+
+.lv_newsList_wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+}
+
+.lv_newsList_item {
+    display: grid;
+    grid-template-columns: 105px 1fr;
+    column-gap: 8px;
+    align-items: flex-start;
+}
+
+/* KHUNG TỶ LỆ 105 / 78 (padding-bottom trực tiếp) */
+.lv_newsList_imgBox {
+    width: 105px;
+    padding-bottom: 74.2857%;
+    /* 78/105 * 100 */
+    position: relative;
+    overflow: hidden;
+    border-radius: 0px;
+}
+
+.lv_newsList_imgBox a {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.lv_newsList_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.lv_newsList_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.lv_newsList_titleBox a {
+    text-decoration: none;
+    color: #000;
+}
+
+.lv_newsList_title {
+    font-size: 16px;
+    color: #000000;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-height: 147%;
+    margin: 0px;
+    text-transform: uppercase;
+}
