@@ -13,10 +13,18 @@ if (!defined('WP_MAX_MEMORY_LIMIT')) {
 }
 
 /**
+ * get currernt lang.
+ */
+define('LANG', function_exists('pll_current_language') ? pll_current_language('slug') : 'vi');
+
+/**
  * Enqueue scripts and styles.
  */
 function child_theme_scripts()
 {
+    // matchHeight
+    wp_enqueue_script('child_theme-script-matchHeight', CHILD_URI . '/assets/inc/matchHeight/jquery.matchHeight.js', array('jquery'), _S_VERSION, true);
+
     // slick
     // wp_enqueue_style('child_theme-style-slick-theme', CHILD_URI . '/assets/inc/slick/slick-theme.css', array(), _S_VERSION);
     // wp_enqueue_style('child_theme-style-slick', CHILD_URI . '/assets/inc/slick/slick.css', array(), _S_VERSION);
@@ -77,6 +85,8 @@ function load_custom_widgets()
 
 function lv_news_cards_shortcode()
 {
+    $news_id = get_field('news_' . LANG, 'option') ?? '';
+
     // Query lấy 3 bài mới nhất
     $args = array(
         'post_type'      => 'post',
@@ -103,37 +113,45 @@ function lv_news_cards_shortcode()
                     </a>
 
                     <!-- TITLE -->
-                    <h3 class="lv_newsCard_title">
+                    <h3 class="lv_newsCard_title" data-mh='lv_newsCard_title'>
                         <a href="<?php the_permalink(); ?>">
                             <?php the_title(); ?>
                         </a>
                     </h3>
 
                     <!-- BADGE (post category đầu tiên) -->
-                    <span class="lv_newsCard_badge">
-                        <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_2043_127)">
-                                <path d="M6.79662 1.20654L9.91163 6.63569H3.68161L6.79662 1.20654Z" fill="white" />
-                                <path d="M3.68134 13.2714C2.27376 13.2714 1.1327 12.0561 1.1327 10.5569C1.1327 9.05764 2.27376 7.84229 3.68134 7.84229C5.08892 7.84229 6.22999 9.05764 6.22999 10.5569C6.22999 12.0561 5.08892 13.2714 3.68134 13.2714Z" fill="white" />
-                                <path d="M11.8936 8.14355H7.36264V12.9695H11.8936V8.14355Z" fill="white" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_2043_127">
-                                    <rect width="13.5928" height="14.4777" fill="white" transform="matrix(-1 0 0 1 13.5928 0)" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                        <?php _e('Tin tức', 'child_theme'); ?>
-                    </span>
+                    <?php
+                    $cats = get_the_category();
+                    if (! empty($cats)) :
+                    ?>
+                        <span class="lv_newsCard_badge <?php echo ($news_id == $cats[0]->term_id) ? 'news' : ''; ?>">
+                            <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_2043_127)">
+                                    <path d="M6.79662 1.20654L9.91163 6.63569H3.68161L6.79662 1.20654Z" fill="white" />
+                                    <path d="M3.68134 13.2714C2.27376 13.2714 1.1327 12.0561 1.1327 10.5569C1.1327 9.05764 2.27376 7.84229 3.68134 7.84229C5.08892 7.84229 6.22999 9.05764 6.22999 10.5569C6.22999 12.0561 5.08892 13.2714 3.68134 13.2714Z" fill="white" />
+                                    <path d="M11.8936 8.14355H7.36264V12.9695H11.8936V8.14355Z" fill="white" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_2043_127">
+                                        <rect width="13.5928" height="14.4777" fill="white" transform="matrix(-1 0 0 1 13.5928 0)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <?php
+                            echo $cats[0]->name;
+                            ?>
+                        </span>
+                    <?php endif; ?>
 
                     <!-- DESCRIPTION -->
-                    <div class="lv_newsCard_desc">
+                    <div class="lv_newsCard_desc" data-mh="lv_newsCard_desc">
                         <?php echo wp_trim_words(get_the_excerpt(), 20, '...'); ?>
                     </div>
 
                     <!-- BUTTON -->
-                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more">XEM THÊM >>></a>
-
+                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more">
+                        <?php _e('XEM THÊM', 'child_theme'); ?> >>>
+                    </a>
                 </div>
 
             <?php endwhile;
@@ -150,13 +168,15 @@ add_shortcode('news_cards', 'lv_news_cards_shortcode');
 function display_latest_posts_shortcode()
 {
     ob_start(); // Bắt đầu buổi ghi đệm HTML
+    $news_id = get_field('news_' . LANG, 'option') ?? '';
 
     // Lấy 3 bài viết mới nhất
     $args = array(
         'post_type' => 'post', // Lấy bài viết
         'posts_per_page' => 3, // Lấy 3 bài viết
         'orderby' => 'date', // Sắp xếp theo ngày đăng
-        'order' => 'DESC' // Sắp xếp giảm dần theo ngày đăng
+        'order' => 'DESC', // Sắp xếp giảm dần theo ngày đăng
+        'cat'  => $news_id,
     );
 
     $latest_posts = new WP_Query($args);
@@ -177,7 +197,7 @@ function display_latest_posts_shortcode()
         echo '</div>';
         echo '<div class="lv_news_bigExcerpt">' . wp_trim_words($first_post->post_content, 20) . '</div>';
         echo '<div>';
-        echo '<a href="' . get_permalink($first_post->ID) . '" class="lv_news_bigReadmore">XEM chi tiết >>></a>';
+        echo '<a href="' . get_permalink($first_post->ID) . '" class="lv_news_bigReadmore">' . __('XEM CHI TIẾT', 'child_theme') . ' >>></a>';
         echo '</div>';
         echo '</div>';
         echo '</div>';
@@ -195,7 +215,7 @@ function display_latest_posts_shortcode()
             echo '<a href="' . get_permalink($post->ID) . '">' . get_the_title($post->ID) . '</a>';
             echo '</div>';
             echo '<div class="lv_news_smallExcerpt">' . wp_trim_words($post->post_content, 20) . '</div>';
-            echo '<a href="' . get_permalink($post->ID) . '" class="lv_news_smallReadmore">XEM THÊM >>></a>';
+            echo '<a href="' . get_permalink($post->ID) . '" class="lv_news_smallReadmore">' . __('XEM THÊM', 'child_theme') . ' >>></a>';
             echo '</div>';
             echo '</div>';
         }
@@ -214,10 +234,13 @@ add_shortcode('latest_posts', 'display_latest_posts_shortcode');
 function lv_event_cards_shortcode()
 {
     // Query lấy 3 event mới nhất
+    $events_id = get_field('events_' . LANG, 'option') ?? '';
+
     $args = array(
-        'post_type'      => 'event',
-        'posts_per_page' => 12,
-        'post_status'    => 'publish'
+        'post_type'      => 'post',
+        'posts_per_page' => 3,
+        'post_status'    => 'publish',
+        'cat'            => $events_id,
     );
     $query = new WP_Query($args);
 
@@ -239,36 +262,45 @@ function lv_event_cards_shortcode()
                     </a>
 
                     <!-- TITLE -->
-                    <h3 class="lv_newsCard_title">
+                    <h3 class="lv_newsCard_title" data-mh="lv_newsCard_title">
                         <a href="<?php the_permalink(); ?>">
                             <?php the_title(); ?>
                         </a>
                     </h3>
 
                     <!-- BADGE (taxonomy: category đầu tiên nếu có) -->
-                    <span class="lv_newsCard_badge">
-                        <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_2043_127)">
-                                <path d="M6.79662 1.20654L9.91163 6.63569H3.68161L6.79662 1.20654Z" fill="white" />
-                                <path d="M3.68134 13.2714C2.27376 13.2714 1.1327 12.0561 1.1327 10.5569C1.1327 9.05764 2.27376 7.84229 3.68134 7.84229C5.08892 7.84229 6.22999 9.05764 6.22999 10.5569C6.22999 12.0561 5.08892 13.2714 3.68134 13.2714Z" fill="white" />
-                                <path d="M11.8936 8.14355H7.36264V12.9695H11.8936V8.14355Z" fill="white" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_2043_127">
-                                    <rect width="13.5928" height="14.4777" fill="white" transform="matrix(-1 0 0 1 13.5928 0)" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                        <?php _e('Sự kiện', 'child_theme'); ?>
-                    </span>
+                    <?php
+                    $cats = get_the_category();
+                    if (! empty($cats)) :
+                    ?>
+                        <span class="lv_newsCard_badge">
+                            <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_2043_127)">
+                                    <path d="M6.79662 1.20654L9.91163 6.63569H3.68161L6.79662 1.20654Z" fill="white" />
+                                    <path d="M3.68134 13.2714C2.27376 13.2714 1.1327 12.0561 1.1327 10.5569C1.1327 9.05764 2.27376 7.84229 3.68134 7.84229C5.08892 7.84229 6.22999 9.05764 6.22999 10.5569C6.22999 12.0561 5.08892 13.2714 3.68134 13.2714Z" fill="white" />
+                                    <path d="M11.8936 8.14355H7.36264V12.9695H11.8936V8.14355Z" fill="white" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_2043_127">
+                                        <rect width="13.5928" height="14.4777" fill="white" transform="matrix(-1 0 0 1 13.5928 0)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <?php
+                            echo $cats[0]->name;
+                            ?>
+                        </span>
+                    <?php endif; ?>
 
                     <!-- DESCRIPTION -->
-                    <div class="lv_newsCard_desc">
+                    <div class="lv_newsCard_desc" data-mh="lv_newsCard_desc">
                         <?php echo wp_trim_words(get_the_excerpt(), 20, '...'); ?>
                     </div>
 
                     <!-- BUTTON -->
-                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more">XEM THÊM >>></a>
+                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more">
+                        <?php _e('XEM THÊM', 'child_theme'); ?> >>>
+                    </a>
 
                 </div>
 
@@ -288,13 +320,15 @@ function lv_event_cards_paging_shortcode()
 {
     // Lấy trang hiện tại
     $paged = get_query_var('paged') ? get_query_var('paged') : 1;
+    $events_id = get_field('events_' . LANG, 'option') ?? '';
 
     // Query event — 12 bài
     $args = array(
-        'post_type'      => 'event',
+        'post_type'      => 'post',
         'posts_per_page' => 12,
         'paged'          => $paged,
-        'post_status'    => 'publish'
+        'post_status'    => 'publish',
+        'cat'            => $events_id,
     );
 
     $query = new WP_Query($args);
@@ -318,36 +352,44 @@ function lv_event_cards_paging_shortcode()
                     </a>
 
                     <!-- TITLE -->
-                    <h3 class="lv_newsCard_title">
+                    <h3 class="lv_newsCard_title" data-mh="lv_newsCard_title">
                         <a href="<?php the_permalink(); ?>">
                             <?php the_title(); ?>
                         </a>
                     </h3>
 
                     <!-- BADGE -->
-                    <span class="lv_newsCard_badge">
-                        <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_2043_127)">
-                                <path d="M6.79662 1.20654L9.91163 6.63569H3.68161L6.79662 1.20654Z" fill="white" />
-                                <path d="M3.68134 13.2714C2.27376 13.2714 1.1327 12.0561 1.1327 10.5569C1.1327 9.05764 2.27376 7.84229 3.68134 7.84229C5.08892 7.84229 6.22999 9.05764 6.22999 10.5569C6.22999 12.0561 5.08892 13.2714 3.68134 13.2714Z" fill="white" />
-                                <path d="M11.8936 8.14355H7.36264V12.9695H11.8936V8.14355Z" fill="white" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_2043_127">
-                                    <rect width="13.5928" height="14.4777" fill="white" transform="matrix(-1 0 0 1 13.5928 0)" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                        <?php _e('Sự kiện', 'child_theme'); ?>
-                    </span>
+                    <?php
+                    $cats = get_the_category();
+                    if (! empty($cats)) :
+                    ?>
+                        <span class="lv_newsCard_badge">
+                            <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_2043_127)">
+                                    <path d="M6.79662 1.20654L9.91163 6.63569H3.68161L6.79662 1.20654Z" fill="white" />
+                                    <path d="M3.68134 13.2714C2.27376 13.2714 1.1327 12.0561 1.1327 10.5569C1.1327 9.05764 2.27376 7.84229 3.68134 7.84229C5.08892 7.84229 6.22999 9.05764 6.22999 10.5569C6.22999 12.0561 5.08892 13.2714 3.68134 13.2714Z" fill="white" />
+                                    <path d="M11.8936 8.14355H7.36264V12.9695H11.8936V8.14355Z" fill="white" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_2043_127">
+                                        <rect width="13.5928" height="14.4777" fill="white" transform="matrix(-1 0 0 1 13.5928 0)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+
+                            <?php
+                            echo $cats[0]->name;
+                            ?>
+                        </span>
+                    <?php endif; ?>
 
                     <!-- DESCRIPTION -->
-                    <div class="lv_newsCard_desc">
+                    <div class="lv_newsCard_desc" data-mh="lv_newsCard_desc">
                         <?php echo wp_trim_words(get_the_excerpt(), 20, '...'); ?>
                     </div>
 
                     <!-- BUTTON -->
-                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more">XEM THÊM >>></a>
+                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more"><?php _e('XEM THÊM', 'child_theme'); ?> >>></a>
 
                 </div>
 
@@ -381,13 +423,15 @@ function lv_post_cards_paging_shortcode()
 {
     // Lấy trang hiện tại
     $paged = get_query_var('paged') ? get_query_var('paged') : 1;
+    $news_id = get_field('news_' . LANG, 'option') ?? '';
 
-    // Query post — 3 bài mỗi trang
+    // Query post
     $args = array(
         'post_type'      => 'post',
         'posts_per_page' => 12,
         'paged'          => $paged,
-        'post_status'    => 'publish'
+        'post_status'    => 'publish',
+        'cat'            => $news_id,
     );
 
     $query = new WP_Query($args);
@@ -411,36 +455,43 @@ function lv_post_cards_paging_shortcode()
                     </a>
 
                     <!-- TITLE -->
-                    <h3 class="lv_newsCard_title">
+                    <h3 class="lv_newsCard_title" data-mh="lv_newsCard_title">
                         <a href="<?php the_permalink(); ?>">
                             <?php the_title(); ?>
                         </a>
                     </h3>
 
                     <!-- BADGE -->
-                    <span class="lv_newsCard_badge">
-                        <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_2043_127)">
-                                <path d="M6.79662 1.20654L9.91163 6.63569H3.68161L6.79662 1.20654Z" fill="white" />
-                                <path d="M3.68134 13.2714C2.27376 13.2714 1.1327 12.0561 1.1327 10.5569C1.1327 9.05764 2.27376 7.84229 3.68134 7.84229C5.08892 7.84229 6.22999 9.05764 6.22999 10.5569C6.22999 12.0561 5.08892 13.2714 3.68134 13.2714Z" fill="white" />
-                                <path d="M11.8936 8.14355H7.36264V12.9695H11.8936V8.14355Z" fill="white" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_2043_127">
-                                    <rect width="13.5928" height="14.4777" fill="white" transform="matrix(-1 0 0 1 13.5928 0)" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                        <?php _e('Tin tức', 'child_theme'); ?>
-                    </span>
+                    <?php
+                    $cats = get_the_category();
+                    if (! empty($cats)) :
+                    ?>
+                        <span class="lv_newsCard_badge news">
+                            <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_2043_127)">
+                                    <path d="M6.79662 1.20654L9.91163 6.63569H3.68161L6.79662 1.20654Z" fill="white" />
+                                    <path d="M3.68134 13.2714C2.27376 13.2714 1.1327 12.0561 1.1327 10.5569C1.1327 9.05764 2.27376 7.84229 3.68134 7.84229C5.08892 7.84229 6.22999 9.05764 6.22999 10.5569C6.22999 12.0561 5.08892 13.2714 3.68134 13.2714Z" fill="white" />
+                                    <path d="M11.8936 8.14355H7.36264V12.9695H11.8936V8.14355Z" fill="white" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_2043_127">
+                                        <rect width="13.5928" height="14.4777" fill="white" transform="matrix(-1 0 0 1 13.5928 0)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <?php
+                            echo $cats[0]->name;
+                            ?>
+                        </span>
+                    <?php endif; ?>
 
                     <!-- DESCRIPTION -->
-                    <div class="lv_newsCard_desc">
+                    <div class="lv_newsCard_desc" data-mh="lv_newsCard_desc">
                         <?php echo wp_trim_words(get_the_excerpt(), 20, '...'); ?>
                     </div>
 
                     <!-- BUTTON -->
-                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more">XEM THÊM >>></a>
+                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more"><?php _e('XEM THÊM', 'child_theme'); ?> >>></a>
 
                 </div>
 
