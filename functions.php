@@ -197,7 +197,7 @@ function display_latest_posts_shortcode()
         echo '</div>';
         echo '<div class="lv_news_bigExcerpt">' . wp_trim_words($first_post->post_content, 20) . '</div>';
         echo '<div>';
-        echo '<a href="' . get_permalink($first_post->ID) . '" class="lv_news_bigReadmore">' . (LANG == 'vi' ? 'XEM THÊM' : 'SEE MORE') . ' >>></a>';
+        echo '<a href="' . get_permalink($first_post->ID) . '" class="lv_news_bigReadmore">' . (LANG == 'vi' ? 'XEM CHI TIẾT' : 'VIEW DETAILS') . ' >>></a>';
         echo '</div>';
         echo '</div>';
         echo '</div>';
@@ -215,7 +215,7 @@ function display_latest_posts_shortcode()
             echo '<a href="' . get_permalink($post->ID) . '">' . get_the_title($post->ID) . '</a>';
             echo '</div>';
             echo '<div class="lv_news_smallExcerpt">' . wp_trim_words($post->post_content, 20) . '</div>';
-            echo '<a href="' . get_permalink($post->ID) . '" class="lv_news_smallReadmore">' . __('XEM THÊM', 'child_theme') . ' >>></a>';
+            echo '<a href="' . get_permalink($post->ID) . '" class="lv_news_smallReadmore">' . (LANG == 'vi' ? 'XEM THÊM' : 'SEE MORE') . ' >>></a>';
             echo '</div>';
             echo '</div>';
         }
