@@ -550,8 +550,15 @@ add_action('wp_update_nav_menu_item', function ($menu_id, $menu_item_db_id) {
 // Hiển thị icon ngoài frontend
 add_filter('walker_nav_menu_start_el', function ($item_output, $item) {
     $icon = get_post_meta($item->ID, '_menu_item_icon', true);
-    if ($icon) {
-        $icon_html = '<img src="' . esc_url($icon) . '" alt="" class="menu-icon" />';
+
+    if ($icon && !empty($item->url)) {
+        $icon_html = sprintf(
+            '<a href="%s" class="menu-icon-link" style="padding: 0px; margin:0px;"><img src="%s" alt="" class="menu-icon" /></a>',
+            esc_url($item->url),
+            esc_url($icon)
+        );
+
+        // Icon link đứng TRƯỚC link menu gốc
         $item_output = $icon_html . $item_output;
     }
     return $item_output;
