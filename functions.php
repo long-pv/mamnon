@@ -150,7 +150,7 @@ function lv_news_cards_shortcode()
 
                     <!-- BUTTON -->
                     <a href="<?php the_permalink(); ?>" class="lv_newsCard_more">
-                        <?php _e('XEM THÊM', 'child_theme'); ?> >>>
+                        <?php echo LANG == 'vi' ? 'XEM THÊM' : 'SEE MORE'; ?> >>>
                     </a>
                 </div>
 
@@ -197,7 +197,7 @@ function display_latest_posts_shortcode()
         echo '</div>';
         echo '<div class="lv_news_bigExcerpt">' . wp_trim_words($first_post->post_content, 20) . '</div>';
         echo '<div>';
-        echo '<a href="' . get_permalink($first_post->ID) . '" class="lv_news_bigReadmore">' . __('XEM CHI TIẾT', 'child_theme') . ' >>></a>';
+        echo '<a href="' . get_permalink($first_post->ID) . '" class="lv_news_bigReadmore">' . (LANG == 'vi' ? 'XEM THÊM' : 'SEE MORE') . ' >>></a>';
         echo '</div>';
         echo '</div>';
         echo '</div>';
@@ -299,7 +299,7 @@ function lv_event_cards_shortcode()
 
                     <!-- BUTTON -->
                     <a href="<?php the_permalink(); ?>" class="lv_newsCard_more">
-                        <?php _e('XEM THÊM', 'child_theme'); ?> >>>
+                        <?php echo LANG == 'vi' ? 'XEM THÊM' : 'SEE MORE'; ?> >>>
                     </a>
 
                 </div>
@@ -389,7 +389,7 @@ function lv_event_cards_paging_shortcode()
                     </div>
 
                     <!-- BUTTON -->
-                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more"><?php _e('XEM THÊM', 'child_theme'); ?> >>></a>
+                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more"><?php echo LANG == 'vi' ? 'XEM THÊM' : 'SEE MORE'; ?> >>></a>
 
                 </div>
 
@@ -491,7 +491,7 @@ function lv_post_cards_paging_shortcode()
                     </div>
 
                     <!-- BUTTON -->
-                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more"><?php _e('XEM THÊM', 'child_theme'); ?> >>></a>
+                    <a href="<?php the_permalink(); ?>" class="lv_newsCard_more"><?php echo LANG == 'vi' ? 'XEM THÊM' : 'SEE MORE'; ?> >>></a>
 
                 </div>
 
